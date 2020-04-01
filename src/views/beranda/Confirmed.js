@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Card, CardTitle, CardBody, Spinner, Table} from 'reactstrap';
+import {Card, CardTitle, CardBody} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {Confirmed} from "../../config/endpoint";
 import moment from "moment";
@@ -10,15 +10,15 @@ import '@fortawesome/fontawesome-free/css/all.css'
 
 const Confirm = () => {
     const [data, setData] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    //const [isLoading, setIsLoading] = useState(true);
 
     async function fetchData() {
-        setIsLoading(true);
+        //setIsLoading(true);
         const response = await fetch(Confirmed);
         const json = await response.json();
 
         setData(json);
-        setIsLoading(false);
+        //setIsLoading(false);
     }
 
     useEffect(() => {
@@ -27,7 +27,7 @@ const Confirm = () => {
 
     const _data = {
         columns: [
-            {label: '#', field: 'no', sort: 'asc'},
+            {label: '#', field: 'no', sort: 'asc', width: '10px'},
             {label: 'Negara', field: 'country', sort: 'asc'},
             {label: 'Positif', field: 'positif', sort: 'asc'},
             {label: 'Negatif', field: 'negatif', sort: 'asc'},
@@ -39,7 +39,7 @@ const Confirm = () => {
         rows: data.map((item, key) => {
             const _country = item['provinceState'] == null ? item['countryRegion'] : item['provinceState']+" ("+item['countryRegion']+ ")";
             const _cfr = item['deaths']/item['confirmed']*100;
-            const _flag = item.iso2 === undefined ? '' : <img src={`https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.6/flags/4x3/${item.iso2.toLowerCase()}.svg`} alt={_country} width={'15px'} />;
+            //const _flag = item.iso2 === undefined ? '' : <img src={`https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.6/flags/4x3/${item.iso2.toLowerCase()}.svg`} alt={_country} width={'15px'} />;
             return {
                 no: key+1,
                 country: _country,
@@ -65,57 +65,11 @@ const Confirm = () => {
                         hover
                         data={_data}
                         sortable={false}
-                        scrollX
+                        //scrollX
                     />
             </CardBody>
         </Card>
     );
-
-    /*return (
-        <Card>
-            <CardBody>
-                <CardTitle className={'text-danger'}><b><FontAwesomeIcon icon={faGlobe} /> Daily Update COVID-19</b></CardTitle>
-                <Table dark striped hover responsive>
-                    <thead>
-                        <tr>
-                            <th width={'10px'}>#</th>
-                            <th>Negara</th>
-                            <th className={'text-primary'}>Positif</th>
-                            <th className={'text-success'}>Sembuh</th>
-                            <th className={'text-danger'}>Meninggal</th>
-                            <th className={'text-muted'}>Dalam Perawatan</th>
-                            <th className={'text-muted'}>CFR (%)</th>
-                            <th>Last Update</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {
-                        isLoading ? <tr><td colSpan={7}><Spinner color={'dark'}/></td></tr> :
-                            data.map((item, key) => {
-                                const _country = item['provinceState'] == null ? item['countryRegion'] : item['provinceState']+" ("+item['countryRegion']+ ")";
-                                const _cfr = item['deaths']/item['confirmed']*100;
-                                const _flag = item.iso2 === undefined ? '' : <img src={`https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.6/flags/4x3/${item.iso2.toLowerCase()}.svg`} alt={_country} width={'15px'} />;
-                                return (
-                                    <tr key={key}>
-                                        <td>{key+1}</td>
-                                        <td>{_flag} {_country}
-                                        </td>
-                                        <td className={'text-primary'}>{item['confirmed'].toLocaleString()}</td>
-                                        <td className={'text-success'}>{item['recovered'].toLocaleString()}</td>
-                                        <td className={'text-danger'}>{item['deaths'].toLocaleString()}</td>
-                                        <td className={'text-muted'}>{item['active'].toLocaleString()}</td>
-                                        <td>{_cfr.toLocaleString()}</td>
-                                        <td>{moment(item['lastUpdate']).format('MMMM Do YYYY, h:mm:ss')}</td>
-                                    </tr>
-                                );
-                            })
-                    }
-                    </tbody>
-                </Table>
-            </CardBody>
-
-        </Card>
-    );*/
 }
 
 export default Confirm;
