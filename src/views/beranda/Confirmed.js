@@ -65,7 +65,7 @@ const Confirm = () => {
                         hover
                         data={_data}
                         sortable={false}
-                        //scrollX
+                        responsive
                     />
             </CardBody>
         </Card>
